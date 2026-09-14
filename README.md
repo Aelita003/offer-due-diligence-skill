@@ -1,4 +1,4 @@
-# look-before-you-leap
+# offer-due-diligence-skill
 
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 
@@ -70,17 +70,17 @@
 
 把下面这句话直接发给你在用的 AI agent（Claude Code / WorkBuddy / Cursor / VS Code Copilot 等），它会自己下载并放到正确位置：
 
-> 帮我安装这个 Agent Skill：https://github.com/Aelita003/look-before-you-leap
-> 把它 clone 到你的 skills 目录，目录名保持 `look-before-you-leap`。
+> 帮我安装这个 Agent Skill：https://github.com/Aelita003/offer-due-diligence-skill
+> 把它 clone 到你的 skills 目录，目录名保持 `offer-due-diligence-skill`。
 
 装完重启 agent 即可生效。
 
 ### 手动安装
 
-clone 到你的 skills 目录，目录名保持 `look-before-you-leap`（SKILL.md 里的 `name` 字段须与目录名一致）：
+clone 到你的 skills 目录，目录名保持 `offer-due-diligence-skill`（SKILL.md 里的 `name` 字段须与目录名一致）：
 
 ```bash
-git clone https://github.com/Aelita003/look-before-you-leap.git ~/.claude/skills/look-before-you-leap
+git clone https://github.com/Aelita003/offer-due-diligence-skill.git ~/.claude/skills/offer-due-diligence-skill
 ```
 
 常见 skills 目录：Claude Code `~/.claude/skills/`、WorkBuddy `~/.workbuddy/skills/`、VS Code Copilot `.agents/skills/`（项目内）。
@@ -89,9 +89,9 @@ git clone https://github.com/Aelita003/look-before-you-leap.git ~/.claude/skills
 
 Paste this into your agent:
 
-> Install this Agent Skill: https://github.com/Aelita003/look-before-you-leap — clone it into your skills directory, keeping the folder name `look-before-you-leap`.
+> Install this Agent Skill: https://github.com/Aelita003/offer-due-diligence-skill — clone it into your skills directory, keeping the folder name `offer-due-diligence-skill`.
 
-Or clone it manually into your agent's skills directory. Keep the directory name `look-before-you-leap` — the `name` field in SKILL.md must match its parent directory.
+Or clone it manually into your agent's skills directory. Keep the directory name `offer-due-diligence-skill` — the `name` field in SKILL.md must match its parent directory.
 
 ## 使用 / Usage
 
@@ -109,7 +109,7 @@ Or clone it manually into your agent's skills directory. Keep the directory name
 ## 目录结构 / Structure
 
 ```
-look-before-you-leap/
+offer-due-diligence-skill/
 ├── SKILL.md                            # 技能主体：4 阶段工作流 + 5 条纪律
 ├── LICENSE                             # CC BY-NC 4.0
 ├── references/

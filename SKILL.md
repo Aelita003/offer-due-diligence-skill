@@ -1,5 +1,5 @@
 ---
-name: look-before-you-leap
+name: offer-due-diligence-skill
 description: 求职者意向企业背景调查技能。当用户在求职、跳槽、面试前后想了解某家公司是否值得加入、想调研某家企业时使用——典型触发如"帮我背调一下XX公司""了解下这家公司靠不靠谱""这家公司值得去吗""调研下XX公司的产品和竞争"。该技能以证据驱动方式调研企业的产品业务、盈利模式、竞争优势、近期动态，并补充求职者关心的风险红旗、员工口碑、薪酬基准、成长发展维度，最终输出一份"结论先行、证据在后佐证"的结构化 HTML 报告，附红绿灯风险信号与可追溯的证据清单，报告保存为本地文件。不用于法律尽职调查或投资尽调，仅服务求职决策。 Company background check for job seekers. Use when the user wants to research a company before accepting an offer, asks "is this company worth joining", or needs an employer due-diligence report. Covers business model, competitive edge and recent moves, plus risk red flags, employee reviews, salary benchmarks and growth outlook. Outputs a conclusion-first, evidence-traceable HTML report with traffic-light risk signals. Not for legal or investment due diligence.
 license: CC-BY-NC-4.0
 ---
