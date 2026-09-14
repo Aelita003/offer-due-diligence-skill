@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业背调报告 — {{COMPANY_NAME}}</title>
+<!--
+  企业背调 HTML 报告模板（结论先行 · 证据在后佐证）
+  填充说明：
+  - 顶部 {{...}} 占位符替换为实际内容
+  - ① 卡片赛道拆三段：{{BIZ_TRACK_STATIC}}=静态盘（体量/增速/竞争烈度/天花板）、{{BIZ_TRACK_CYCLE}}=周期（上行/下行/平稳）、{{BIZ_TRACK_JOB}}=求职含义（上行贝塔掩饰/下行回报受限/平稳个体分化）
+  - 红绿灯：给 .verdict 加 class light-red / light-yellow / light-green 之一（保留其中一个，删另两个）
+  - {{LIGHT_NATURE}}：黄灯时填"风险型黄灯（有坏苗头，需证伪）"或"不确定性型黄灯（看不清，需定价）"；红/绿灯时填"已证实硬风险"或"检索范围内未发现硬风险"
+  - 详细分析各节：复制 .sec 块，按 A/B/C/D/E/F/G/H/I/J 填充；关键事实后用 <sup class="fn"><a href="#evN">N</a></sup> 链到证据附录对应行
+  - 证据附录：每条证据一个 <tr id="evN">；id 与正文脚注对应
+  - 待验证问题：<ul> 列出已知未知
+  - 所有结论必须能在证据表中找到对应行；查不到的标"未公开"，绝不编造
+-->
+<style>
+  :root{
+    --bg:#ffffff;--surface:#f7f7f4;--ink:#2c2c2a;--muted:#5f5e5a;--faint:#888780;
+    --line:#e3e1d8;--line2:#d3d1c7;
+    --red:#c0392b;--red-bg:#fdecea;--yellow:#b8860b;--yellow-bg:#fdf6e3;--green:#1e8449;--green-bg:#eafaf1;
+    --accent:#185fa5;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--surface);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  .report{max-width:880px;margin:0 auto;background:var(--bg);padding:40px 48px 56px}
+  @media(max-width:640px){.report{padding:24px 18px 40px}}
+  h1{font-size:22px;margin:0 0 4px;font-weight:600}
+  h2{font-size:17px;margin:34px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line2);font-weight:600}
+  h3{font-size:14.5px;margin:22px 0 10px;font-weight:600;color:var(--muted)}
+  p{margin:8px 0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .meta{color:var(--faint);font-size:12.5px;margin-bottom:6px}
+  .tag{display:inline-block;background:var(--surface);border:1px solid var(--line2);border-radius:4px;padding:1px 8px;font-size:12px;color:var(--muted);margin-right:6px}
+
+  /* 红绿灯结论条 */
+  .verdict{border-radius:12px;padding:18px 20px;margin:18px 0 6px;border:1px solid var(--line2);display:flex;gap:16px;align-items:flex-start}
+  .verdict .lights{display:flex;flex-direction:column;gap:8px;flex-shrink:0;padding-top:2px}
+  .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line2);background:#fff}
+  .light-red .dot.on{background:var(--red);border-color:var(--red)}
+  .light-yellow .dot.on{background:var(--yellow);border-color:var(--yellow)}
+  .light-green .dot.on{background:var(--green);border-color:var(--green)}
+  .verdict .vbody{flex:1}
+  .vlevel{font-size:15px;font-weight:600}
+  .light-red .vlevel{color:var(--red)}
+  .light-yellow .vlevel{color:var(--yellow)}
+  .light-green .vlevel{color:var(--green)}
+  .vadvice{margin:6px 0 0;font-size:13.5px}
+  .vconf{font-size:12px;color:var(--faint)}
+
+  /* 摘要卡片 */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .card .ct{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px}
+  .card .cc{font-size:13.5px}
+  .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .pill{flex:1 1 45%;min-width:200px;border:1px solid var(--line2);border-radius:20px;padding:8px 14px;font-size:13px}
+  .pill .pt{font-weight:600;color:var(--muted);font-size:12.5px}
+
+  /* 详细分析 */
+  .sec{margin:18px 0;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+  .sec .st{font-size:14.5px;font-weight:600;margin:0 0 6px}
+  .sec .sconclusion{font-weight:600}
+  sup.fn a{display:inline-block;min-width:14px;text-align:center;font-size:10px;background:var(--yellow-bg);
+    color:var(--yellow);border-radius:3px;padding:0 3px;margin:0 1px;line-height:14px}
+  .contra{font-size:12.5px;color:var(--red);background:var(--red-bg);border-left:3px solid var(--red);
+    padding:6px 10px;border-radius:0 6px 6px 0;margin:8px 0}
+
+  /* 证据表 */
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+  th,td{text-align:left;padding:7px 8px;border:1px solid var(--line);vertical-align:top}
+  th{background:var(--surface);font-weight:600;color:var(--muted);white-space:nowrap}
+  tr:target td{background:#fffbea}
+  .conf-high{color:var(--green);font-weight:600}
+  .conf-mid{color:var(--yellow);font-weight:600}
+  .conf-low{color:var(--red);font-weight:600}
+  .todo li{margin:5px 0}
+  footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
+  @media print{body{background:#fff}.report{max-width:none}}
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- ===== 报告头 ===== -->
+  <h1>企业背景调查报告 · {{COMPANY_NAME}}</h1>
+  <div class="meta">
+    <span class="tag">{{COMPANY_TYPE}}</span>
+    <span class="tag">调研截止：{{CUTOFF_DATE}}</span>
+  </div>
+  <p class="meta">本报告基于公开信息整理，仅服务求职决策，不构成法律/投资/审计意见。结论可由脚注下翻至文末证据附录核实。</p>
+
+  <!-- ===== 红绿灯结论条 ===== -->
+  <!-- 保留与风险等级对应的 class：light-red / light-yellow / light-green -->
+  <section class="verdict light-yellow">
+    <div class="lights">
+      <span class="dot"></span>
+      <span class="dot on"></span>
+      <span class="dot"></span>
+    </div>
+    <div class="vbody">
+      <div class="vlevel">风险等级：黄灯 · {{RISK_REASON}}</div>
+      <p class="vadvice">{{ONE_LINE_ADVICE}}</p>
+      <p class="vconf">置信度：{{CONFIDENCE}} · {{LIGHT_NATURE}} · 判定依据见证据附录风险类条目</p>
+    </div>
+  </section>
+
+  <!-- ===== 求职建议模块（独立区块） ===== -->
+  <!-- 若信息不足无法给出建议，保留标题并写"基于现有证据暂无法给出明确建议，建议面试后补充信息再评估" -->
+  <h2>求职建议</h2>
+  <div style="background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:10px 0 18px">
+    <p style="margin:0 0 8px;font-size:14.5px;font-weight:600">核心判断：{{JOB_ADVICE_HEADLINE}}</p>
+    <p style="margin:6px 0"><strong>支持理由：</strong></p>
+    <ul style="margin:4px 0 10px">
+      <li>{{JOB_ADVICE_PRO_1}}</li>
+      <li>{{JOB_ADVICE_PRO_2}}</li>
+      <li>{{JOB_ADVICE_PRO_3}}</li>
+    </ul>
+    <p style="margin:6px 0"><strong>需权衡的因素：</strong></p>
+    <ul style="margin:4px 0 10px">
+      <li>{{JOB_ADVICE_CONS_1}}</li>
+      <li>{{JOB_ADVICE_CONS_2}}</li>
+    </ul>
+    <p style="margin:6px 0"><strong>面试重点核实：</strong></p>
+    <ul style="margin:4px 0 0">
+      <li>{{JOB_ADVICE_VERIFY_1}}</li>
+      <li>{{JOB_ADVICE_VERIFY_2}}</li>
+      <li>{{JOB_ADVICE_VERIFY_3}}</li>
+    </ul>
+  </div>
+
+  <!-- ===== 一、结论摘要 ===== -->
+  <h2>一、结论摘要</h2>
+  <h3>商业四问</h3>
+  <div class="grid">
+    <div class="card"><div class="ct">① 产品与业务 · 赛道成色</div><div class="cc">{{BIZ_PRODUCT}}</div><div class="cc" style="font-size:12px;color:var(--muted)">静态盘：{{BIZ_TRACK_STATIC}}</div><div class="cc" style="font-size:12px;color:var(--muted)">周期：{{BIZ_TRACK_CYCLE}}</div><div class="cc" style="font-size:12px;color:var(--muted)">求职含义：{{BIZ_TRACK_JOB}}</div></div>
+    <div class="card"><div class="ct">② 盈利与客户</div><div class="cc">{{BIZ_REVENUE}}</div></div>
+    <div class="card"><div class="ct">③ 竞争优势</div><div class="cc">{{BIZ_EDGE}}</div></div>
+    <div class="card"><div class="ct">④ 近期动态</div><div class="cc">{{BIZ_NEWS}}</div></div>
+  </div>
+  <h3>求职者四问</h3>
+  <div class="pill-row">
+    <div class="pill"><span class="pt">⑤ 风险红旗</span><br>{{JOB_RISK}}</div>
+    <div class="pill"><span class="pt">⑥ 口碑文化</span><br>{{JOB_CULTURE}}</div>
+    <div class="pill"><span class="pt">⑦ 薪酬基准</span><br>{{JOB_PAY}}</div>
+    <div class="pill"><span class="pt">⑧ 成长发展</span><br>{{JOB_GROWTH}}</div>
+  </div>
+
+  <!-- ===== 二、详细分析（结论 + 内联脚注） ===== -->
+  <h2>二、详细分析</h2>
+
+  <!-- 复制此 .sec 块填充各节：A 公司速览 / B 产品 / C 盈利 / D 竞争 / E 动态 / F 财务健康信号（可选）/ G 风险 / H 口碑 / I 薪酬 / J 成长 -->
+  <!-- 财务健康信号（可选，标低可信）：融资总额/最近轮次时间→跑道估算；员工数趋势；招聘方向。内部现金流不可得。 -->
+  <div class="sec">
+    <p class="st">B. 产品与业务</p>
+    <p class="sconclusion">结论：{{SECTION_CONCLUSION}}</p>
+    <p>支撑：{{SUPPORTING_FACTS}}<sup class="fn"><a href="#ev1">1</a></sup>，{{MORE_FACTS}}<sup class="fn"><a href="#ev2">2</a></sup>。</p>
+    <!-- 有相反证据时使用 -->
+    <div class="contra">相反证据：{{CONTRADICTORY_EVIDENCE}}</div>
+  </div>
+
+  <!-- ===== 三、证据附录 ===== -->
+  <h2>三、证据附录</h2>
+  <p class="meta">每条结论可由此表追溯。id 与正文脚注对应；可信度：高=官方/财报/监管，中=主流媒体/招聘页，低=社区口碑/匿名。</p>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>结论（当前可以说什么）</th><th>来源</th><th>时间</th>
+        <th>原文要点</th><th>支持问题</th><th>可信度与限制</th><th>相反证据</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 复制此 <tr> 填充每条证据，id="evN" 与正文脚注 N 对应 -->
+      <tr id="ev1">
+        <td>1</td>
+        <td>{{CLAIM}}</td>
+        <td><a href="{{SOURCE_URL}}" target="_blank" rel="noopener">{{SOURCE_NAME}}</a></td>
+        <td>{{DATE_YYYY_MM_DD}}</td>
+        <td>{{ORIGINAL_POINTS}}</td>
+        <td>{{QUESTION_NO}}</td>
+        <td><span class="conf-high">高</span> · {{LIMITATION}}</td>
+        <td>{{CONTRA_OR_NONE}}</td>
+      </tr>
+      <tr id="ev2">
+        <td>2</td>
+        <td>{{CLAIM}}</td>
+        <td><a href="{{SOURCE_URL}}" target="_blank" rel="noopener">{{SOURCE_NAME}}</a></td>
+        <td>{{DATE_YYYY_MM_DD}}</td>
+        <td>{{ORIGINAL_POINTS}}</td>
+        <td>{{QUESTION_NO}}</td>
+        <td><span class="conf-low">低</span> · {{LIMITATION}}</td>
+        <td>{{CONTRA_OR_NONE}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>待验证问题</h3>
+  <ul class="todo">
+    <li>{{UNRESOLVED_QUESTION_1}}</li>
+    <li>{{UNRESOLVED_QUESTION_2}}</li>
+  </ul>
+
+  <!-- 缺失板块清单（仅当黄灯因"信息不足"时显示；信息充足时删除此块） -->
+  <h3>缺失板块清单（信息不足）</h3>
+  <div style="background:#fdf6e3;border-left:3px solid #b8860b;border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;margin:8px 0 16px">
+    <p style="margin:0 0 6px;font-weight:600">本报告因公开信息不足，以下原设定必含板块未查到：</p>
+    <ul style="margin:0">
+      <li>{{MISSING_SECTION_1}}</li>
+      <li>{{MISSING_SECTION_2}}</li>
+    </ul>
+    <p style="margin:8px 0 0">建议面试时重点核实：{{INTERVIEW_VERIFY_ITEMS}}</p>
+  </div>
+
+  <footer>
+    本报告检索范围：{{SEARCH_SCOPE}} · 截止 {{CUTOFF_DATE}}。"未查到负面"不等于"确认安全"，仅表示在上述范围内未发现。
+    私企内部数据未公开项均如实标注，未作编造。
+  </footer>
+
+</div>
+</body>
+</html>
