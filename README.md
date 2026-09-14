@@ -66,21 +66,32 @@
 
 这是一个标准 Agent Skills 目录：`SKILL.md` + `references/` + `assets/`。
 
-**Claude Code**
+### 最省事：让你的 agent 自己装
+
+把下面这句话直接发给你在用的 AI agent（Claude Code / WorkBuddy / Cursor / VS Code Copilot 等），它会自己下载并放到正确位置：
+
+> 帮我安装这个 Agent Skill：https://github.com/Aelita003/look-before-you-leap
+> 把它 clone 到你的 skills 目录，目录名保持 `look-before-you-leap`。
+
+装完重启 agent 即可生效。
+
+### 手动安装
+
+clone 到你的 skills 目录，目录名保持 `look-before-you-leap`（SKILL.md 里的 `name` 字段须与目录名一致）：
 
 ```bash
 git clone https://github.com/Aelita003/look-before-you-leap.git ~/.claude/skills/look-before-you-leap
 ```
 
-**WorkBuddy / 其他兼容工具**
+常见 skills 目录：Claude Code `~/.claude/skills/`、WorkBuddy `~/.workbuddy/skills/`、VS Code Copilot `.agents/skills/`（项目内）。
 
-把仓库目录复制到你的 skills 目录即可，目录名保持 `look-before-you-leap`（SKILL.md 里的 `name` 字段须与目录名一致）：
+### Quick install
 
-```bash
-git clone https://github.com/Aelita003/look-before-you-leap.git <你的 skills 目录>/look-before-you-leap
-```
+Paste this into your agent:
 
-*Clone the repo into your agent's skills directory. Keep the directory name `look-before-you-leap` — the `name` field in SKILL.md must match its parent directory.*
+> Install this Agent Skill: https://github.com/Aelita003/look-before-you-leap — clone it into your skills directory, keeping the folder name `look-before-you-leap`.
+
+Or clone it manually into your agent's skills directory. Keep the directory name `look-before-you-leap` — the `name` field in SKILL.md must match its parent directory.
 
 ## 使用 / Usage
 
